@@ -1,0 +1,85 @@
+/* =======================================================
+   SCROLL-REVEAL BASE STATES
+   GSAP toggles .is-visible; CSS defines the hidden -> shown states
+   so content is still present/readable with JS disabled.
+======================================================= */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+}
+
+.split-line {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.split-line__inner {
+  display: block;
+  transform: translateY(100%);
+}
+
+.split-line.is-visible .split-line__inner {
+  transform: translateY(0);
+  transition: transform 0.85s var(--ease-out);
+}
+
+/* =======================================================
+   KEYFRAMES
+======================================================= */
+@keyframes scrollCue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(250%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.js-loading {
+  opacity: 0;
+}
+
+.js-ready {
+  opacity: 1;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+/* =======================================================
+   NO-JS / REDUCED MOTION FALLBACK
+   If JS never runs, nothing should stay invisible.
+======================================================= */
+.no-js [data-reveal],
+.no-js .split-line__inner,
+.no-js .hero__title-line .line-inner {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .split-line__inner,
+  .hero__title-line .line-inner {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero__media img,
+  .depth__media img {
+    transform: none !important;
+  }
+}
