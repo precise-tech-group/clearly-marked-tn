@@ -1,9 +1,15 @@
 /*
-  Hero WebGL scene — a handful of glowing "paint stripe" meshes fanning
-  into the distance over the hero photograph, with gentle mouse parallax
-  and a scroll-tied camera dolly. Deliberately lightweight (no post-
-  processing, no textures) and fully optional: the hero reads correctly
-  as a static photograph if this never runs.
+  Hero WebGL scene — a continuous, living environment of glowing "paint
+  stripe" segments that flow toward the camera in lanes (an infinite-road
+  effect), a soft horizon glow sprite, and drifting dust particles, with
+  gentle mouse parallax and a scroll-tied camera dolly.
+
+  Deliberately unlit/basic-material and texture-light (one generated canvas
+  gradient for the glow) so it stays cheap on the GPU — no post-processing.
+  Fully optional: once initialized, the hero gets a `.scene-active` class
+  that CSS uses to dim the underlying photo; if this script never runs
+  (reduced motion, low power, no WebGL), the hero still reads correctly as
+  a static, well-lit photograph.
 */
 (function () {
   "use strict";
@@ -32,90 +38,108 @@
   }
 
   var GOLD = 0xe3c35c;
-  var FOG_COLOR = 0x10131a;
+  var WARM_WHITE = 0xf5ead0;
+  var FOG_COLOR = 0x0c0e12;
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(FOG_COLOR, 0.11);
+  scene.fog = new THREE.FogExp2(FOG_COLOR, 0.085);
 
-  var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
-  camera.position.set(0, 1.6, 6.2);
-  camera.lookAt(0, -0.4, -6);
+  var camera = new THREE.PerspectiveCamera(46, 1, 0.1, 80);
+  camera.position.set(0, 1.9, 7);
+  camera.lookAt(0, -0.6, -10);
 
-  var stripesGroup = new THREE.Group();
-  scene.add(stripesGroup);
+  /* ---------- Horizon glow (generated canvas gradient sprite) ---------- */
+  function makeGlowTexture() {
+    var size = 256;
+    var c = document.createElement("canvas");
+    c.width = size;
+    c.height = size;
+    var ctx = c.getContext("2d");
+    var gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    gradient.addColorStop(0, "rgba(227, 195, 92, 0.85)");
+    gradient.addColorStop(0.4, "rgba(227, 195, 92, 0.28)");
+    gradient.addColorStop(1, "rgba(227, 195, 92, 0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+    return new THREE.CanvasTexture(c);
+  }
 
-  var STRIPE_COUNT = 7;
-  var stripeMeshes = [];
+  var glowTexture = makeGlowTexture();
+  var glowMat = new THREE.SpriteMaterial({
+    map: glowTexture,
+    transparent: true,
+    opacity: 0.55,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    fog: false
+  });
+  var glowSprite = new THREE.Sprite(glowMat);
+  glowSprite.scale.set(16, 10, 1);
+  glowSprite.position.set(0, 1, -24);
+  scene.add(glowSprite);
 
-  for (var i = 0; i < STRIPE_COUNT; i++) {
-    var t = i / (STRIPE_COUNT - 1); /* 0..1 */
-    var xSpread = (t - 0.5) * 9;
-    var length = 16;
+  /* ---------- Flowing stripe lanes (infinite "road" effect) ---------- */
+  var LANES = 6;
+  var SEGMENTS_PER_LANE = 3;
+  var LANE_SPREAD = 10;
+  var SEGMENT_LENGTH = 7;
+  var SPAN_Z = SEGMENTS_PER_LANE * SEGMENT_LENGTH * 1.4; /* loop distance */
+  var NEAR_Z = 9; /* recycle point, just past the camera */
+  var FAR_Z = NEAR_Z - SPAN_Z;
+  var FLOW_SPEED = 2.6; /* units per second */
 
-    var geo = new THREE.BoxGeometry(0.09, 0.015, length);
-    var mat = new THREE.MeshBasicMaterial({
-      color: GOLD,
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    });
+  var stripes = [];
 
-    var mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(xSpread * 1.6, -1.1, -length / 2 + 2);
-    mesh.rotation.y = -xSpread * 0.045;
-    mesh.scale.z = 0.001;
-    mesh.userData.targetScaleZ = 1;
-    mesh.userData.delay = i * 0.07;
-    stripesGroup.add(mesh);
-    stripeMeshes.push(mesh);
+  for (var lane = 0; lane < LANES; lane++) {
+    var t = lane / (LANES - 1); /* 0..1 */
+    var x = (t - 0.5) * LANE_SPREAD;
+    var tilt = -(t - 0.5) * 0.12;
+
+    for (var s = 0; s < SEGMENTS_PER_LANE; s++) {
+      var geo = new THREE.BoxGeometry(0.1, 0.02, SEGMENT_LENGTH);
+      var warm = (lane + s) % 5 === 0;
+      var mat = new THREE.MeshBasicMaterial({
+        color: warm ? WARM_WHITE : GOLD,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      var mesh = new THREE.Mesh(geo, mat);
+      var z = NEAR_Z - s * (SEGMENT_LENGTH * 1.4) - t * 1.2;
+      mesh.position.set(x, -1.2, z);
+      mesh.rotation.y = tilt;
+      mesh.userData.baseOpacity = warm ? 0.4 : 0.6;
+      scene.add(mesh);
+      stripes.push(mesh);
+    }
   }
 
   /* ---------- Dust particles ---------- */
-  var PARTICLE_COUNT = 90;
+  var PARTICLE_COUNT = 110;
   var positions = new Float32Array(PARTICLE_COUNT * 3);
   for (var p = 0; p < PARTICLE_COUNT; p++) {
-    positions[p * 3] = (Math.random() - 0.5) * 10;
-    positions[p * 3 + 1] = Math.random() * 4 - 1;
-    positions[p * 3 + 2] = Math.random() * -18 + 2;
+    positions[p * 3] = (Math.random() - 0.5) * 12;
+    positions[p * 3 + 1] = Math.random() * 4.5 - 1;
+    positions[p * 3 + 2] = Math.random() * -22 + 2;
   }
   var particleGeo = new THREE.BufferGeometry();
   particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   var particleMat = new THREE.PointsMaterial({
     color: 0xf5f3ec,
-    size: 0.025,
+    size: 0.026,
     transparent: true,
-    opacity: 0.35,
+    opacity: 0.3,
     blending: THREE.AdditiveBlending,
     depthWrite: false
   });
   var particles = new THREE.Points(particleGeo, particleMat);
   scene.add(particles);
 
-  /* ---------- Entrance animation ---------- */
-  var startTime = performance.now();
+  /* ---------- Entrance fade ---------- */
   var hasGSAP = typeof window.gsap !== "undefined";
-
-  if (hasGSAP) {
-    stripeMeshes.forEach(function (mesh) {
-      window.gsap.to(mesh.scale, {
-        z: mesh.userData.targetScaleZ,
-        duration: 1.4,
-        delay: 0.3 + mesh.userData.delay,
-        ease: "power3.out"
-      });
-      window.gsap.to(mesh.material, {
-        opacity: 0.55,
-        duration: 1.4,
-        delay: 0.3 + mesh.userData.delay,
-        ease: "power2.out"
-      });
-    });
-  } else {
-    stripeMeshes.forEach(function (mesh) {
-      mesh.scale.z = 1;
-    });
-  }
+  var introStart = performance.now();
+  var INTRO_DURATION = 1800;
 
   /* ---------- Mouse parallax (damped) ---------- */
   var pointer = { x: 0, y: 0 };
@@ -132,7 +156,9 @@
   function updateScrollProgress() {
     var rect = heroEl.getBoundingClientRect();
     var viewH = window.innerHeight;
-    var raw = 1 - (rect.bottom - viewH) / rect.height;
+    /* 0 when the hero sits fully in view at the top of the page,
+       approaching 1 as it scrolls out of view (one viewport height). */
+    var raw = -rect.top / viewH;
     scrollProgress = Math.min(Math.max(raw, 0), 1.4);
   }
   updateScrollProgress();
@@ -166,26 +192,48 @@
   });
 
   /* ---------- Render loop ---------- */
-  function animate() {
+  var lastTime = performance.now();
+
+  function animate(now) {
     requestAnimationFrame(animate);
+
+    var dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
 
     if (!isIntersecting || !isPageVisible) return;
 
     pointer.x += (pointerTarget.x - pointer.x) * 0.04;
     pointer.y += (pointerTarget.y - pointer.y) * 0.04;
 
-    camera.position.x = pointer.x * 0.5;
-    camera.position.y = 1.6 - pointer.y * 0.25 - scrollProgress * 0.6;
-    camera.position.z = 6.2 - scrollProgress * 2.4;
-    camera.lookAt(pointer.x * 0.2, -0.4, -6);
+    camera.position.x = pointer.x * 0.6;
+    camera.position.y = 1.9 - pointer.y * 0.25 - scrollProgress * 0.7;
+    camera.position.z = 7 - scrollProgress * 2.6;
+    camera.lookAt(pointer.x * 0.25, -0.6, -10);
 
-    var t = performance.now() * 0.00005;
-    particles.rotation.y = t;
+    var introT = Math.min((now - introStart) / INTRO_DURATION, 1);
+    var introEase = 1 - Math.pow(1 - introT, 3);
 
-    canvas.style.opacity = String(Math.max(1 - scrollProgress * 0.9, 0));
+    for (var i = 0; i < stripes.length; i++) {
+      var mesh = stripes[i];
+      mesh.position.z += FLOW_SPEED * dt;
+      if (mesh.position.z > NEAR_Z) {
+        mesh.position.z -= SPAN_Z;
+      }
+
+      /* fade in from the fog, fade out just before reaching the camera */
+      var depth = (mesh.position.z - FAR_Z) / (NEAR_Z - FAR_Z); /* 0 far -> 1 near */
+      var fade = Math.sin(Math.min(Math.max(depth, 0), 1) * Math.PI);
+      mesh.material.opacity = mesh.userData.baseOpacity * fade * introEase;
+    }
+
+    glowSprite.material.opacity = 0.5 + Math.sin(now * 0.0006) * 0.08;
+    particles.rotation.y = now * 0.00005;
+
+    canvas.style.opacity = String(Math.max(1 - scrollProgress * 0.9, 0) * introEase);
 
     renderer.render(scene, camera);
   }
 
+  heroEl.classList.add("scene-active");
   requestAnimationFrame(animate);
 })();
