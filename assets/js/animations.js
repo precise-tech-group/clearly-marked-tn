@@ -247,17 +247,6 @@
       }
     });
 
-    window.gsap.fromTo(".depth__media img", { scale: 1.16 }, {
-      scale: 1.02,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".depth",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-
     var whyImg = document.querySelector("[data-parallax-img] img");
     if (whyImg) {
       window.gsap.fromTo(whyImg, { yPercent: -8 }, {

@@ -31,6 +31,40 @@
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
   <link rel="stylesheet" href="assets/css/responsive.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How fast can you turn around a job?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We'll have your lot looking sharp in a week or less." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you work outside normal business hours?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — we work around your schedule, evenings and weekends included, so your business never has to close for us." }
+      },
+      {
+        "@type": "Question",
+        "name": "What if something isn't right after the work is done?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Any workmanship issue within 30 days, we'll fix it free." }
+      },
+      {
+        "@type": "Question",
+        "name": "What areas do you serve?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Brentwood, Nolensville, Smyrna, Franklin, and the surrounding Middle Tennessee area." }
+      },
+      {
+        "@type": "Question",
+        "name": "What services do you offer?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Parking lot striping, restripe & refresh, ADA compliant layouts, signage & wheel stop installation, and driveway sealcoating & crack filling." }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -176,14 +210,57 @@
       </div>
     </section>
 
-    <!-- ============ CTA BAND ============ -->
-    <section class="cta-band">
-      <div class="container">
-        <p class="eyebrow" data-reveal>See It For Yourself</p>
-        <h2 class="cta-band__title" data-reveal>Explore everything we handle, start to finish.</h2>
-        <div class="cta-band__actions" data-reveal>
-          <a class="btn btn-gold btn-lg" href="services.html"><span>View Services</span></a>
-          <a class="btn btn-outline btn-lg" href="contact.html"><span>Request a Quote</span></a>
+    <!-- ============ FAQ ============ -->
+    <section class="faq">
+      <div class="container faq__grid">
+        <div class="faq__head">
+          <p class="eyebrow" data-reveal>Common Questions</p>
+          <h2 class="faq__title" data-reveal>Before you reach out.</h2>
+          <a class="btn btn-gold" href="contact.html" data-reveal>
+            <span>Request a Quote</span>
+          </a>
+        </div>
+
+        <div class="faq__list" data-reveal>
+          <details class="faq-item">
+            <summary class="faq-item__summary">
+              How fast can you turn around a job?
+              <span class="faq-item__icon" aria-hidden="true"></span>
+            </summary>
+            <p class="faq-item__answer">We'll have your lot looking sharp in a week or less.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">
+              Can you work outside normal business hours?
+              <span class="faq-item__icon" aria-hidden="true"></span>
+            </summary>
+            <p class="faq-item__answer">Yes — we work around your schedule, evenings and weekends included, so your business never has to close for us.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">
+              What if something isn't right after the work is done?
+              <span class="faq-item__icon" aria-hidden="true"></span>
+            </summary>
+            <p class="faq-item__answer">Any workmanship issue within 30 days, we'll fix it free.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">
+              What areas do you serve?
+              <span class="faq-item__icon" aria-hidden="true"></span>
+            </summary>
+            <p class="faq-item__answer">Brentwood, Nolensville, Smyrna, Franklin, and the surrounding Middle Tennessee area.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-item__summary">
+              What services do you offer?
+              <span class="faq-item__icon" aria-hidden="true"></span>
+            </summary>
+            <p class="faq-item__answer">Parking lot striping, restripe &amp; refresh, ADA compliant layouts, signage &amp; wheel stop installation, and driveway sealcoating &amp; crack filling.</p>
+          </details>
         </div>
       </div>
     </section>

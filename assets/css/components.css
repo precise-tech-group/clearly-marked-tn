@@ -638,50 +638,6 @@
 }
 
 /* =======================================================
-   DEPTH TRANSITION
-======================================================= */
-.depth {
-  position: relative;
-  height: 90vh;
-  min-height: 34rem;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: var(--asphalt-900);
-}
-
-.depth__media {
-  position: absolute;
-  inset: 0;
-}
-
-.depth__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.12);
-  will-change: transform;
-}
-
-.depth__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, rgba(10, 12, 16, 0.88) 10%, rgba(10, 12, 16, 0.3) 60%);
-}
-
-.depth__content {
-  position: relative;
-  z-index: 2;
-}
-
-.depth__title {
-  margin-top: var(--space-sm);
-  font-size: var(--fs-display-lg);
-  color: var(--paper);
-  max-width: 16ch;
-}
-
-/* =======================================================
    WHY CHOOSE US
 ======================================================= */
 .why {
@@ -1120,6 +1076,11 @@ a.contact__value:hover::after {
   padding-bottom: var(--space-2xl);
 }
 
+.page-header--tall {
+  min-height: 92svh;
+  padding-bottom: var(--space-3xl);
+}
+
 .page-header__media {
   position: absolute;
   inset: 0;
@@ -1131,12 +1092,28 @@ a.contact__value:hover::after {
   height: 100%;
   object-fit: cover;
   transform: scale(1.06);
+  animation: heroDrift 18s ease-in-out infinite alternate;
+}
+
+@keyframes heroDrift {
+  from {
+    transform: scale(1.06) translateY(0);
+  }
+  to {
+    transform: scale(1.12) translateY(-1.5%);
+  }
 }
 
 .page-header__scrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(0deg, rgba(10, 12, 16, 0.92) 0%, rgba(10, 12, 16, 0.4) 55%, rgba(10, 12, 16, 0.55) 100%);
+}
+
+.page-header--tall .page-header__scrim {
+  background:
+    linear-gradient(0deg, rgba(8, 10, 14, 0.94) 0%, rgba(8, 10, 14, 0.3) 50%, rgba(8, 10, 14, 0.62) 100%),
+    linear-gradient(100deg, rgba(8, 10, 14, 0.55) 0%, rgba(8, 10, 14, 0) 45%);
 }
 
 .page-header__content {
@@ -1151,11 +1128,36 @@ a.contact__value:hover::after {
   max-width: 18ch;
 }
 
+.page-header--tall .page-header__title {
+  font-size: var(--fs-display-xl);
+  max-width: 14ch;
+}
+
 .page-header__lede {
   margin-top: var(--space-md);
   font-size: var(--fs-body-lg);
   color: var(--paper-soft);
   max-width: 48ch;
+}
+
+.page-header__scroll-cue {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--container-pad);
+  z-index: 2;
+  width: 2px;
+  height: 4rem;
+  background: var(--hairline-dark);
+}
+
+.page-header__scroll-cue span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: var(--line-gold);
+  animation: scrollCue 2.2s var(--ease-in-out) infinite;
 }
 
 .breadcrumb {
@@ -1347,4 +1349,265 @@ a.contact__value:hover::after {
   opacity: 0.05;
   mix-blend-mode: multiply;
   pointer-events: none;
+}
+
+/* =======================================================
+   SERVICE AREA (Home) — the five communities served
+======================================================= */
+.service-area {
+  background: var(--paper);
+  padding-block: var(--space-2xl);
+}
+
+.service-area__head {
+  max-width: 34rem;
+  margin-bottom: var(--space-xl);
+}
+
+.service-area__title {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-display-md);
+}
+
+.service-area__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--hairline-light);
+  border: 1px solid var(--hairline-light);
+}
+
+.area-card {
+  background: var(--paper);
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-height: 11rem;
+  justify-content: space-between;
+  transition: background var(--dur-med) var(--ease-out);
+}
+
+.area-card:hover {
+  background: var(--chalk-100);
+}
+
+.area-card__pin {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--line-gold-deep);
+}
+
+.area-card__pin svg {
+  width: 100%;
+  height: 100%;
+}
+
+.area-card__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-heading);
+}
+
+.area-card--more {
+  background: var(--asphalt-900);
+  color: var(--paper);
+}
+
+.area-card--more .area-card__name {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--paper-soft);
+}
+
+/* =======================================================
+   PROCESS / HOW IT WORKS (Services)
+======================================================= */
+.process {
+  background: var(--asphalt-900);
+  color: var(--paper);
+  padding-block: var(--space-2xl);
+}
+
+.process__head {
+  max-width: 36rem;
+  margin-bottom: var(--space-xl);
+}
+
+.process__title {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-display-md);
+  color: var(--paper);
+}
+
+.process__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.process-step {
+  position: relative;
+  padding-top: var(--space-lg);
+  border-top: 2px solid var(--hairline-dark);
+}
+
+.process-step__num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-display-md);
+  color: var(--brand-navy);
+  line-height: 1;
+}
+
+.process-step__title {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-body-lg);
+  font-weight: 700;
+  color: var(--paper);
+}
+
+.process-step__desc {
+  margin-top: var(--space-2xs);
+  color: var(--paper-soft);
+  font-size: var(--fs-small);
+}
+
+/* =======================================================
+   FAQ (Why Us)
+======================================================= */
+.faq {
+  background: var(--chalk-100);
+  padding-block: var(--space-3xl);
+}
+
+.faq__grid {
+  display: grid;
+  grid-template-columns: 0.8fr 2.2fr;
+  gap: var(--space-2xl);
+}
+
+.faq__title {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-display-md);
+  max-width: 14ch;
+}
+
+.faq__head .btn {
+  margin-top: var(--space-lg);
+}
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-item {
+  border-top: 1px solid var(--hairline-light);
+}
+
+.faq__list .faq-item:last-child {
+  border-bottom: 1px solid var(--hairline-light);
+}
+
+.faq-item__summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-md);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: var(--fs-body-lg);
+}
+
+.faq-item__summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item__icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  position: relative;
+}
+
+.faq-item__icon::before,
+.faq-item__icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+
+.faq-item__icon::before {
+  width: 16px;
+  height: 2px;
+}
+
+.faq-item__icon::after {
+  width: 2px;
+  height: 16px;
+}
+
+.faq-item[open] .faq-item__icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+  opacity: 0;
+}
+
+.faq-item__answer {
+  padding-bottom: var(--space-md);
+  color: var(--ink-soft);
+  max-width: 56ch;
+}
+
+/* =======================================================
+   WHAT TO EXPECT (Contact) — compact 3-step strip
+======================================================= */
+.expect-steps {
+  background: var(--chalk-50);
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid var(--hairline-light);
+}
+
+.expect-steps__row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.expect-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.expect-step__num {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-gold-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-small);
+  color: var(--ink);
+}
+
+.expect-step__title {
+  font-weight: 700;
+  font-size: var(--fs-small);
+}
+
+.expect-step__desc {
+  margin-top: 0.15rem;
+  font-size: var(--fs-small);
+  color: var(--ink-soft);
 }

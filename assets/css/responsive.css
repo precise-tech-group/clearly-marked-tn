@@ -75,8 +75,27 @@
 
   .why__grid,
   .contact__grid,
-  .why-teaser__grid {
+  .why-teaser__grid,
+  .faq__grid {
     grid-template-columns: 1fr;
+  }
+
+  .service-area__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .area-card--more {
+    grid-column: span 4;
+  }
+
+  .process__grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--space-xl);
+  }
+
+  .expect-steps__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
   }
 
   .why-teaser__image {
@@ -144,14 +163,13 @@
     justify-content: center;
   }
 
-  .depth {
-    height: 70vh;
-    min-height: 26rem;
-  }
-
   .page-header {
     min-height: 36vh;
     padding-top: calc(var(--space-3xl) + 1rem);
+  }
+
+  .page-header--tall {
+    min-height: 78svh;
   }
 
   .services-teaser__grid {
@@ -160,6 +178,23 @@
 
   .why-teaser__content {
     padding-block: var(--space-xl);
+  }
+
+  .service-area__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .area-card--more {
+    grid-column: span 2;
+  }
+
+  .process__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .page-header--tall .page-header__title {
+    font-size: var(--fs-display-lg);
   }
 
   .cta-band__actions {

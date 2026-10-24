@@ -94,9 +94,9 @@
   <main id="main">
 
     <!-- ============ PAGE HEADER ============ -->
-    <section class="page-header">
+    <section class="page-header page-header--tall">
       <div class="page-header__media">
-        <img src="assets/images/stripes-diagonal.webp" alt="Close-up of bold black and white diagonal painted stripes" loading="eager" />
+        <img src="assets/images/garage-depth.webp" alt="Deep one-point perspective down a parking structure lane with painted directional arrows" loading="eager" fetchpriority="high" />
         <div class="page-header__scrim"></div>
       </div>
       <div class="container page-header__content">
@@ -108,6 +108,7 @@
           new-construction layout.
         </p>
       </div>
+      <div class="page-header__scroll-cue" aria-hidden="true"><span></span></div>
     </section>
 
     <!-- ============ SERVICES INDEX ============ -->
@@ -173,17 +174,36 @@
       </div>
     </section>
 
-    <!-- ============ DEPTH TRANSITION ============ -->
-    <section class="depth" data-depth>
-      <div class="depth__media">
-        <img src="assets/images/garage-depth.webp" alt="Deep perspective view down a parking structure lane with painted directional arrows" loading="lazy" />
-        <div class="depth__scrim"></div>
-      </div>
-      <div class="container depth__content">
-        <p class="eyebrow eyebrow--light" data-reveal>Every Lot Tells a Story</p>
-        <h2 class="depth__title" data-split-lines>
-          Layouts that guide, lines that last
-        </h2>
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="process">
+      <div class="container">
+        <div class="process__head">
+          <p class="eyebrow eyebrow--light" data-reveal>How It Works</p>
+          <h2 class="process__title" data-reveal>From request to finished lines.</h2>
+        </div>
+
+        <div class="process__grid">
+          <div class="process-step" data-reveal>
+            <span class="process-step__num">01</span>
+            <h3 class="process-step__title">Request a Quote</h3>
+            <p class="process-step__desc">Tell us about your lot and the services you need.</p>
+          </div>
+          <div class="process-step" data-reveal>
+            <span class="process-step__num">02</span>
+            <h3 class="process-step__title">We Confirm Details</h3>
+            <p class="process-step__desc">We follow up by phone or email to confirm scope and scheduling.</p>
+          </div>
+          <div class="process-step" data-reveal>
+            <span class="process-step__num">03</span>
+            <h3 class="process-step__title">We Get to Work</h3>
+            <p class="process-step__desc">Evenings and weekends included — most lots are sharp again in a week or less.</p>
+          </div>
+          <div class="process-step" data-reveal>
+            <span class="process-step__num">04</span>
+            <h3 class="process-step__title">30-Day Guarantee</h3>
+            <p class="process-step__desc">Any workmanship issue within 30 days, we'll fix it free.</p>
+          </div>
+        </div>
       </div>
     </section>
 
